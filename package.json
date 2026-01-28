@@ -1,0 +1,57 @@
+{
+  "name": "@bytriska/ts-package-starter",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.27.0",
+  "description": "A TypeScript package starter template with monorepo support",
+  "author": "Triska Mahfud K (https://github.com/bytriska)",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/bytriska",
+  "homepage": "https://github.com/bytriska/ts-package-starter#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bytriska/ts-package-starter.git"
+  },
+  "bugs": "https://github.com/bytriska/ts-package-starter/issues",
+  "keywords": [],
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsup-node",
+    "release": "pnpm test && bumpp && pnpm publish --access public",
+    "lint": "eslint . && prettier --check .",
+    "lint:fix": "eslint --fix . && prettier --write .",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "simple-git-hooks"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.7.3",
+    "@types/node": "^25.0.3",
+    "@vitest/coverage-v8": "^4.0.16",
+    "bumpp": "^10.3.2",
+    "eslint": "^9.39.2",
+    "lint-staged": "^16.2.7",
+    "prettier": "3.3.3",
+    "simple-git-hooks": "^2.13.1",
+    "tsup": "^8.5.1",
+    "typescript": "<5.9.0",
+    "vitest": "^4.0.16"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,cjs,mjs,json,yaml,md}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
