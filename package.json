@@ -1,18 +1,18 @@
 {
-  "name": "@bytriska/ts-package-starter",
+  "name": "@bytriska/tiered-find-up",
   "type": "module",
   "version": "0.0.0",
   "packageManager": "pnpm@10.27.0",
-  "description": "A TypeScript package starter template with monorepo support",
+  "description": "Advanced find-up with tiered priority. Find the right file, not just the nearest one.",
   "author": "Triska Mahfud K (https://github.com/bytriska)",
   "license": "MIT",
   "funding": "https://github.com/sponsors/bytriska",
-  "homepage": "https://github.com/bytriska/ts-package-starter#readme",
+  "homepage": "https://github.com/bytriska/tiered-find-up#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bytriska/ts-package-starter.git"
+    "url": "git+https://github.com/bytriska/tiered-find-up.git"
   },
-  "bugs": "https://github.com/bytriska/ts-package-starter/issues",
+  "bugs": "https://github.com/bytriska/tiered-find-up/issues",
   "keywords": [],
   "exports": {
     "types": "./dist/index.d.ts",
