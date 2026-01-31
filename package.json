@@ -33,6 +33,7 @@
   ],
   "scripts": {
     "build": "tsup-node",
+    "prepublish": "pnpm build",
     "release": "pnpm test && bumpp",
     "lint": "prettier --check . && eslint .",
     "lint:fix": "prettier --write . && eslint --fix .",
