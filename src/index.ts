@@ -2,88 +2,81 @@ import fsp from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 
-export type SearchKey = string | string[]
-export type PriorityManifest = SearchKey[]
+export type ResolutionCandidate = string | string[]
+export type ResolutionManifest = ResolutionCandidate[]
 
-export interface FindOptions {
+export interface ResolveOptions {
   cwd?: string
-  stopDir?: string
+  boundaryDir?: string
 }
 
-export interface FoundResult {
+export interface ResolutionEntry {
   path: string
   priority: number
-  key: string
-  depth: number
+  identifier: string
+  distance: number
 }
 
-async function* lookup(
-  keys: SearchKey,
-  options: Required<FindOptions> & { data?: { depth: number } },
-): AsyncGenerator<{ path: string, key: string, depth: number }> {
-  const depth = options.data?.depth ?? 0
-  let keyList = keys
-  if (typeof keyList === 'string') {
-    keyList = [keyList]
-  }
+async function* discover(
+  candidates: ResolutionCandidate,
+  options: Required<ResolveOptions> & { context?: { distance: number } },
+): AsyncGenerator<{ path: string, identifier: string, distance: number }> {
+  const distance = options.context?.distance ?? 0
+  const list = Array.isArray(candidates) ? candidates : [candidates]
 
-  for (const key of keyList) {
-    const filepath = path.join(options.cwd, key)
+  for (const identifier of list) {
+    const filepath = path.join(options.cwd, identifier)
     const stat = await fsp.stat(filepath).catch(() => null)
     if (stat) {
-      yield {
-        path: filepath,
-        key,
-        depth,
-      }
+      yield { path: filepath, identifier, distance }
     }
   }
 
-  if (path.resolve(options.cwd) !== path.resolve(options.stopDir)) {
-    yield* lookup(keys, { ...options, cwd: path.dirname(options.cwd), data: { depth: depth + 1 } })
+  if (path.resolve(options.cwd) !== path.resolve(options.boundaryDir)) {
+    yield* discover(candidates, {
+      ...options,
+      cwd: path.dirname(options.cwd),
+      context: { distance: distance + 1 },
+    })
   }
 }
 
-export async function findUpAll(
-  manifest: PriorityManifest,
-  options?: FindOptions,
-): Promise<FoundResult[]> {
-  const normalizedOptions = {
+export async function resolveAll(
+  manifest: ResolutionManifest,
+  options?: ResolveOptions,
+): Promise<ResolutionEntry[]> {
+  const config = {
     cwd: options?.cwd ?? process.cwd(),
-    stopDir: options?.stopDir ?? path.parse(options?.cwd ?? process.cwd()).root,
+    boundaryDir: options?.boundaryDir ?? path.parse(options?.cwd ?? process.cwd()).root,
   }
 
-  const results: FoundResult[] = []
-  for (const [priority, searchKey] of manifest.entries()) {
-    for await (const found of lookup(searchKey, normalizedOptions)) {
-      results.push({
-        path: found.path,
-        key: found.key,
-        depth: found.depth,
+  const entries: ResolutionEntry[] = []
+  for (const [priority, candidate] of manifest.entries()) {
+    for await (const match of discover(candidate, config)) {
+      entries.push({
+        ...match,
         priority,
       })
     }
   }
 
-  return results
+  return entries
 }
 
-export async function findUp(
-  manifest: PriorityManifest,
-  options?: FindOptions,
-): Promise<FoundResult | null> {
-  const normalizedOptions = {
+export async function resolveOne(
+  manifest: ResolutionManifest,
+  options?: ResolveOptions,
+): Promise<ResolutionEntry | null> {
+  const config = {
     cwd: options?.cwd ?? process.cwd(),
-    stopDir: options?.stopDir ?? path.parse(options?.cwd ?? process.cwd()).root,
+    boundaryDir: options?.boundaryDir ?? path.parse(options?.cwd ?? process.cwd()).root,
   }
 
-  for (const [priority, searchKey] of manifest.entries()) {
-    const found = await lookup(searchKey, normalizedOptions).next()
-    if (found.value) {
+  for (const [priority, candidate] of manifest.entries()) {
+    const result = await discover(candidate, config).next()
+    if (result.value) {
       return {
-        path: found.value.path,
-        key: found.value.key,
-        depth: found.value.depth,
+        ...result.value,
         priority,
       }
     }
