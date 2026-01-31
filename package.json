@@ -47,6 +47,7 @@
     "@vitest/coverage-v8": "^4.0.16",
     "bumpp": "^10.3.2",
     "eslint": "^9.39.2",
+    "lint-staged": "^16.2.7",
     "prettier": "3.3.3",
     "simple-git-hooks": "^2.13.1",
     "tsup": "^8.5.1",
@@ -55,5 +56,11 @@
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm test && pnpm lint:fix"
+  },
+  "lint-staged": {
+    "*.{js,ts,cjs,mjs,json,yaml,md}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
