@@ -42,7 +42,7 @@ async function* discover(
 }
 
 export async function resolveAll(
-  manifest: ResolutionManifest,
+  manifest: string | ResolutionManifest,
   options?: ResolveOptions,
 ): Promise<ResolutionEntry[]> {
   const config = {
@@ -51,6 +51,7 @@ export async function resolveAll(
   }
 
   const entries: ResolutionEntry[] = []
+  manifest = typeof manifest === 'string' ? [manifest] : manifest
   for (const [priority, candidate] of manifest.entries()) {
     for await (const match of discover(candidate, config)) {
       entries.push({
@@ -64,7 +65,7 @@ export async function resolveAll(
 }
 
 export async function resolveOne(
-  manifest: ResolutionManifest,
+  manifest: string | ResolutionManifest,
   options?: ResolveOptions,
 ): Promise<ResolutionEntry | null> {
   const config = {
@@ -72,6 +73,7 @@ export async function resolveOne(
     boundaryDir: options?.boundaryDir ?? path.parse(options?.cwd ?? process.cwd()).root,
   }
 
+  manifest = typeof manifest === 'string' ? [manifest] : manifest
   for (const [priority, candidate] of manifest.entries()) {
     const result = await discover(candidate, config).next()
     if (result.value) {

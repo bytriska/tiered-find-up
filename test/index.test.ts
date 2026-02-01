@@ -75,6 +75,15 @@ describe('resolveAll', () => {
     expect(results[0].path).toContain('package.json')
     expect(results[0].distance).toBe(0)
   })
+
+  it('should accept both string or array manifest', async () => {
+    const key = 'package.json'
+
+    const resultsFromString = await resolveAll(key, { cwd: startDir, boundaryDir: fixtures() })
+    const resultsFromArray = await resolveAll([key], { cwd: startDir, boundaryDir: fixtures() })
+
+    expect(resultsFromString).toEqual(resultsFromArray)
+  })
 })
 
 describe('resolveOne', () => {
@@ -140,5 +149,14 @@ describe('resolveOne', () => {
 
     expect(results?.path).toContain('package.json')
     expect(results?.distance).toBe(0)
+  })
+
+  it('should accept both string or array manifest', async () => {
+    const key = 'package.json'
+
+    const resultsFromString = await resolveOne(key, { cwd: startDir, boundaryDir: fixtures() })
+    const resultsFromArray = await resolveOne([key], { cwd: startDir, boundaryDir: fixtures() })
+
+    expect(resultsFromString).toEqual(resultsFromArray)
   })
 })
