@@ -23,16 +23,19 @@
     "nodejs"
   ],
   "exports": {
-    "types": "./dist/index.d.ts",
-    "import": "./dist/index.mjs",
-    "require": "./dist/index.cjs"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist/"
+    "dist"
   ],
   "scripts": {
-    "build": "tsup-node",
+    "build": "tsup",
     "prepublish": "pnpm build",
     "release": "pnpm test && bumpp",
     "lint": "prettier --check . && eslint .",
