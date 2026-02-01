@@ -1,7 +1,7 @@
 {
   "name": "@bytriska/priority-find-up",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "packageManager": "pnpm@10.27.0",
   "description": "Find files by walking up parent directories and resolving them based on an ordered priority manifest.",
   "author": "Triska Mahfud K (https://github.com/bytriska)",
