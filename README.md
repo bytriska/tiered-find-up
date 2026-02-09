@@ -2,7 +2,7 @@
 
 **A priority-aware file discovery utility that respects manifest order over directory depth.**
 
-Unlike libraries like [find-up](https://github.com) which return the first file encountered while walking up the directory tree, `@bytriska/priority-find-up` prioritizes your manifest order. It ensures that if a higher-priority file exists anywhere in the path up to the root, it will be preferred over a lower-priority file found closer to the current working directory.
+Unlike libraries like [find-up](https://github.com/sindresorhus/find-up.git) which return the first file encountered while walking up the directory tree, `@bytriska/priority-find-up` prioritizes your manifest order. It ensures that if a higher-priority file exists anywhere in the path up to the root, it will be preferred over a lower-priority file found closer to the current working directory.
 
 ## The Difference
 
